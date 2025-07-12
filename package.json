@@ -1,7 +1,7 @@
 {
-  "name": "image-block-bot",
+  "name": "safe-chat-bot",
   "version": "1.0.0",
-  "description": "A Discord bot that blocks images, videos, and stickers in a specific channel.",
+  "description": "Blocks media in all channels except 📸☆media☆",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
