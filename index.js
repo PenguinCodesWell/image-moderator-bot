@@ -1,7 +1,8 @@
+// Load discord.js and dotenv
 const { Client, GatewayIntentBits } = require('discord.js');
 require('dotenv').config();
 
-// ✅ Create bot client with required intents
+// Create the bot client with required intents
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -10,25 +11,29 @@ const client = new Client({
   ]
 });
 
-// ✅ Event: when bot is online
+// When bot starts up
 client.once('ready', () => {
   console.log(`🟢 Logged in as ${client.user.tag}`);
 });
 
-// ✅ Event: when a message is sent
+// When a new message is sent
 client.on('messageCreate', async (message) => {
-  if (message.author.bot) return;
+  if (message.author.bot) return; // Ignore bot messages
 
-  // 🔒 Only filter 👻☆chat☆ channel
-  if (message.channel.name === '👻☆chat☆') {
+  // Allow media ONLY in 📸☆media☆ channel
+  if (message.channel.name !== '📸☆media☆') {
     const hasAttachment = message.attachments.size > 0;
     const hasSticker = message.stickers.size > 0;
-    const mediaRegex = /\.(jpg|jpeg|png|gif|bmp|webp|mp4|mov|webm)$/i;
-    const hasLink = mediaRegex.test(message.content);
 
-    if (hasAttachment || hasSticker || hasLink) {
+    // Match links like .jpg, .mp4, etc.
+    const mediaLinkRegex = /\.(jpg|jpeg|png|gif|bmp|webp|mp4|mov|webm)$/i;
+    const hasMediaLink = mediaLinkRegex.test(message.content);
+
+    // If any media detected, delete the message
+    if (hasAttachment || hasSticker || hasMediaLink) {
       try {
         await message.delete();
+        console.log(`🧹 Deleted media message from ${message.author.tag} in #${message.channel.name}`);
       } catch (err) {
         console.error('❌ Could not delete message:', err);
       }
@@ -36,6 +41,5 @@ client.on('messageCreate', async (message) => {
   }
 });
 
-// ✅ Start the bot
+// Log in to Discord using your token
 client.login(process.env.DISCORD_TOKEN);
-
