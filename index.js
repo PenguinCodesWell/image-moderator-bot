@@ -38,3 +38,4 @@ client.on('messageCreate', async (message) => {
 
 // ✅ Start the bot
 client.login(process.env.DISCORD_TOKEN);
+
